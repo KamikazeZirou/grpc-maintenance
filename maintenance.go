@@ -30,10 +30,6 @@ func UnaryServerInterceptor(opts ...Option) grpc.UnaryServerInterceptor {
 // MaintenanceFunc is the pluggable function that determines if maintenance is in progress.
 type MaintenanceFunc func() bool
 
-func alwaysAvailable() bool {
-	return false
-}
-
 // MaintenanceFuncOverride allows a given gRPC service implementation to override the global `MaintenanceFunc`.
 //
 // If a service implements the MaintenanceFuncOverride method, it takes precedence over the `MaintenanceFunc` method,
@@ -53,7 +49,7 @@ type Option func(*options)
 
 func buildOptions(opts ...Option) *options {
 	o := &options{
-		maintenanceFunc: alwaysAvailable,
+		maintenanceFunc: func() bool { return false },
 		message:         defaultMessage,
 	}
 
