@@ -64,7 +64,16 @@ func buildOptions(opts ...Option) *options {
 	return o
 }
 
+// WithMaintenanceFunc registers a function to determine if the system is under maintenance.
+func WithMaintenanceFunc(f MaintenanceFunc) Option {
+	return func(o *options) {
+		o.maintenanceFunc = f
+	}
+}
+
 // WithAlwaysMaintenance sets all gRPC services to always be in maintenance.
+//
+// This is a shortcut for "WithMaintenanceFunc(func() bool { return true})".
 func WithAlwaysMaintenance() Option {
 	return func(o *options) {
 		o.maintenanceFunc = func() bool {

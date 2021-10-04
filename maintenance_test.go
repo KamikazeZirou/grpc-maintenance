@@ -67,6 +67,20 @@ func TestUnaryServerInterceptor(t *testing.T) {
 			},
 		},
 		{
+			name: "register a function to determine if the system is under maintenance",
+			args: args{
+				opts: []Option{
+					WithMaintenanceFunc(func() bool { return true }),
+				},
+				info: &grpc.UnaryServerInfo{
+					Server: "notOverrideServer",
+				},
+			},
+			wants: wants{
+				err: status.Error(codes.Unavailable, defaultMessage),
+			},
+		},
+		{
 			name: "Change the message during maintenance",
 			args: args{
 				opts: []Option{
